@@ -1,0 +1,1 @@
+<addinfourl at 4540119952 whose fp = <socket._fileobject object at 0x10e9bfcd0>>
