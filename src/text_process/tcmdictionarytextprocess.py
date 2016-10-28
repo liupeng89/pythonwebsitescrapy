@@ -65,9 +65,10 @@ class TCMDictionaryProcess:
             index = 0
             for line in lines:
 
-                jsondata = {}
-                for kw in self.all_keywords_set:
-                    jsondata.setdefault(kw, '')
+                jsondata = { kw : '' for kw in self.all_keywords_set}
+
+                # for kw in self.all_keywords_set:
+                #     jsondata.setdefault(kw, '')
 
                 noStr = str(10000000 + index * 100)
 
