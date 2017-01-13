@@ -1,161 +1,48 @@
-# # coding: utf-8
-#
-# from selenium import webdriver
-# # import urllib2
-# # import codecs
-# #
-# # url = 'https://patents.google.com/patent/WO1997019087A1/en?q=purslane'
-# #
-# # textfile = codecs.open('selenium.txt', 'w+', 'utf-8')
-# # dirver = webdriver.Firefox()
-# #
-# # dirver.get(url)
-# #
-# # pageSource = dirver.page_source
-# #
-# # # print pageSource
-# # textfile.write(unicode(pageSource))
-# # textfile.close()
-# #
-# # dirver.close()
-#
-# # textfile = codecs.open('urllib2.txt', 'w+', 'utf-8')
-# #
-# # pageSource = urllib2.urlopen(url)
-# #
-# # textfile.write(unicode(pageSource))
-# #
-# # textfile.close()
-#
-# # element = pageSource.find_element_by_id("gb")
-# #
-# # print element
-#
-# # dirver.close()
-#
-# # contentUrl = 'https://patents.google.com/patent/WO1997019087A1/en'
-# # contentBrewser = webdriver.PhantomJS(executable_path='./phantomjs')
-# # contentBrewser.get(contentUrl)
-# # contentPage = contentBrewser.page_source
-# # print contentPage
-#
-# #############################################################
-# import  urllib2
-# # import codecs
-# from bs4 import BeautifulSoup
-#
-# # textfile  = codecs.open('webofscience.txt', 'w+', 'utf-8')
-# pagesource = urllib2.urlopen('https://apps.webofknowledge.com/summary.do?product=WOS&parentProduct=WOS&search_mode=GeneralSearch&parentQid=&qid=2&SID=T2Um4dY7yQI1VseJAVy&&update_back2search_link_param=yes&page=3')
-# # textfile.write(str(pagesource.read()))
-# # print pagesource.read()
-# # textfile.close()
-#
-# pageObj = BeautifulSoup(pagesource.read())
-#
-# sectionList = pageObj.findAll('div', {'class': 'search-results-content'})
-# index = 0
-# if sectionList == None:
-#     print 'section none!'
-# else :
-#     print 'len :', len(sectionList)
-#     # for sectionItem in sectionList:
-#     #     print 'index ', index, ':', sectionItem.get_text()
-#     #     index += 1
-#
+# coding:utf-8
+import requests
+from bs4 import BeautifulSoup
+import time
 
-# ss = '''中文名：阿胶
-#     汉语拼音：Ejiao    拉丁名：ASINICORIICO'''
-# list = ss.split('\n')
-# line = ''
-# for li in list:
-#     line += li
-# print line
+# https://scholar.google.com/scholar?start=710&q=GINKGO+FOLIUM&hl=en&as_sdt=0,5
 
+# url string
+basic_url = 'https://scholar.google.com/scholar?q=GINKGO+FOLIUM&hl=en&as_sdt=0,5&start='
 
+# page_num = 0
+page_num = 25
+while(True):
 
-import re
+    url = basic_url + str(page_num * 10)
 
-medicines = ['阿胶','阿魏','矮地茶','艾片(左旋龙脑)','艾叶','安息香','八角茴香','巴豆','巴豆霜','巴戟天','菝葜','白扁豆','白矾','白附子','白果','白及','白蔹','白茅根','白前','白屈菜','白芍','白术','白头翁','白薇','白鲜皮','白芷','百部','百合','柏子仁','斑蝥','板蓝根','半边莲','半夏','半枝莲','薄荷','暴马子皮','北豆根','北刘寄奴','北沙参','荜茇','荜澄茄','蓖麻子','萹蓄','鳖甲','槟榔','冰片(合成龙脑)','补骨脂','布渣叶','苍耳子','苍术','藏菖蒲','草豆蔻','草果','草乌','草乌叶','侧柏叶','柴胡','蝉蜕','蟾酥','常山','炒瓜蒌子','车前草','车前子','沉香','陈皮','赤芍','赤石脂','赤小豆','茺蔚子','虫白蜡','臭灵丹草','楮实子','川贝母','川楝子','川木通','川木香','川牛膝','川射干','川乌','川芎','穿山甲','穿山龙','穿心莲','垂盆草','椿皮','磁石','刺五加','大豆黄卷','大腹皮','大黄','大蓟','大蓟炭','大青盐','大青叶','大蒜','大血藤','大叶紫珠','大枣','大皂角','丹参','胆南星','淡豆豉','淡竹叶','当归','当药','党参','刀豆','稻芽','灯心草','灯盏细辛(灯盏花)','地枫皮','地肤子','地骨皮','地黄','地锦草','地龙','地榆','滇鸡血藤','颠茄草','丁公藤','丁香','冬虫夏草','冬瓜皮','冬葵果','冬凌草','豆蔻','独活','独一味','杜仲','杜仲叶','断血流','煅石膏','莪术','鹅不食草','儿茶','法半夏','番泻叶','翻白草','防风','防己','飞扬草','榧子','粉萆藓','粉葛','枫香脂','蜂房','蜂胶','蜂蜡','蜂蜜','佛手','茯苓','茯苓皮','浮萍','附子','覆盆子','甘草','甘松','甘遂','干姜','干漆','杠板归','高良姜','高山辣根菜','藁本','葛根','功劳木','钩藤','狗脊','枸骨叶','枸杞子','谷精草','谷芽','骨碎补','瓜蒌皮','瓜蒌子','瓜萎','瓜子金','关黄柏','贯叶金丝桃','广东紫珠','广金钱草','广枣','龟甲','龟甲胶','桂枝','哈蟆油','蛤蚧','蛤壳','海金沙','海龙','海马','海螵蛸','海藻','诃子','合欢花','合欢皮','何首乌','荷叶','核桃仁','鹤虱','黑豆','黑芝麻','黑种草子','红参','红大戟','红豆蔻','红粉','红花','红景天','红芪','洪连','厚朴','厚朴花','胡黄连','胡椒','胡芦巴','湖北贝母','槲寄生','虎杖','花椒','花蕊石','华山参','滑石','滑石粉','化橘红','槐角','黄柏','黄精','黄连','黄芪','黄芩','黄山药','黄蜀葵花','黄藤','火麻仁','鸡骨草','鸡冠花','鸡内金','鸡血藤','积雪草','急性子','蒺藜','姜半夏','姜黄','僵蚕','降香','焦槟榔','焦栀子','芥子','金沸草','金果榄','金龙胆草','金礞石','金钱白花蛇','金钱草','金荞麦','金铁锁','金银花','金樱子','筋骨草','锦灯笼','京大戟','荆芥','荆芥穗','荆芥穗炭','荆芥炭','九里香','九香虫','韭菜子','救必应','桔梗','菊花','菊苣','橘核','橘红','卷柏','决明子','榼藤子','苦参','苦地丁','苦楝皮','苦木','苦杏仁','苦玄参','款冬花','昆布','辣椒','莱菔子','蓝布正','狼毒','老鹳草','雷丸','荔枝核','连钱草','连翘','莲房','莲须','莲子','莲子心','两面针','两头尖','蓼大青叶','灵芝','凌霄花','羚羊角','硫黄','龙胆','龙劂叶','龙眼肉','漏芦','芦根','芦荟','炉甘石','鹿角','鹿角胶','鹿角霜','鹿茸','鹿衔草','路路通','罗布麻叶','罗汉果','络石藤','麻黄','麻黄根','马鞭草','马勃','马齿苋','马兜铃','马钱子','马钱子粉','麦冬','麦芽','满山红','蔓荆子','芒硝','猫爪草','毛诃子','没药','玫瑰花','梅花','密蒙花','绵萆薢','绵马贯众','绵马贯众炭','明党参','墨旱莲','母丁香','牡丹皮','牡荆叶','牡蛎','木鳖子','木瓜','木棉花','木通','木香','木贼','南板蓝根','南鹤虱','南沙参','南五味子','闹羊花','牛蒡子','牛黄','牛膝','女贞子','藕节','胖大海','炮姜','佩兰','枇杷叶','片姜黄','平贝母','蒲公英','蒲黄','蕲蛇','千金子','千金子霜','千里光','千年健','牵牛子','前胡','芡实','茜草','羌活','秦艽','秦皮','青黛','青风藤','青果','青蒿','青礞石','青皮','青葙子','青叶胆','轻粉','清半夏','苘麻子','瞿麦','全蝎','拳参','人参','人参叶','人工牛黄','忍冬藤','肉苁蓉','肉豆蔻','肉桂','乳香','蕤仁','三白草','三棵针','三棱','三七','桑白皮','桑寄生','桑螵蛸','桑椹','桑叶','桑枝','沙棘','沙苑子','砂仁','山慈菇','山豆根','山麦冬','山柰','山香圆叶','山药','山银花','山楂','山楂叶','山茱萸','商陆','蛇床子','蛇蜕','射干','麝香','伸筋草','升麻','生姜','蓍草','石菖蒲','石吊兰','石膏','石斛','石决明','石榴皮','石韦','使君子','柿蒂','首乌藤','熟地黄','水飞蓟','水红花子','水牛角','水蛭','丝瓜络','四季青','松花粉','苏合香','苏木','酸枣仁','娑罗子','锁阳','太子参','檀香','桃仁','桃枝','体外培育牛黄','天冬','天花粉','天葵子','天麻','天南星','天然冰片(右旋龙脑)','天山雪莲','天仙藤','天仙子','天竺黄','甜瓜子','铁皮石斛','葶苈子','通草','通关藤','土贝母','土鳖虫(蟅虫)','土茯苓','土荆皮','土木香','菟丝子','瓦楞子','瓦松','王不留行','威灵仙','委陵菜','乌梅','乌梢蛇','乌药','巫山淫羊藿','吴茱萸','蜈蚣','五倍子','五加皮','五味子','西瓜霜','西河柳','西红花','西青果','西洋参','菥蓂','豨莶草','细辛','夏枯草','夏天无','仙鹤草','仙茅','香附','香加皮','香薷','香橼','小驳骨','小茴香','小蓟','小通草','小叶莲','薤白','辛夷','雄黄','徐长卿','续断','玄参','玄明粉','旋覆花','血竭','血余炭','鸦胆子','鸭跖草','亚乎奴(锡生藤)','亚麻子','延胡索(元胡)','洋金花','野菊花','野马追','野木瓜','一枝黄花','伊贝母','益母草','益智','薏苡仁','翼首草','茵陈','银柴胡','银杏叶','淫羊藿','罂粟壳','油松节','余甘子','鱼腥草','禹余粮','禹州漏芦','玉竹','郁金','郁李仁','预知子','芫花','远志','月季花','云芝','皂矾(绿矾)','皂角刺','泽兰','泽泻','浙贝母','珍珠','珍珠母','知母','栀子','蜘蛛香','枳壳','枳实','制草乌','制川乌','制何首乌','制天南星','炙甘草','炙红芪','炙黄芪','钟乳石','肿节风','重楼','朱砂','朱砂根','珠子参','猪胆粉','猪苓','猪牙皂','竹节参','竹茹','紫草','紫河车','紫花地丁','紫花前胡','紫萁贯众','紫石英','紫苏梗','紫苏叶','紫苏子','紫菀','紫珠叶','自然铜','棕榈']
+    r = requests.get(url=url)
 
-result = {}
-# init the result
-for index in range(1, 22):
-    result[str(index)] = ''
+    print r.text
 
+    bs_obj = BeautifulSoup(r.text)
 
-for medicine in medicines:
+    # find the gs_fl div
+    div_items = bs_obj.find_all('div', {'class': 'gs_ri'})
+    # check the last page of search result
+    if div_items == None or len(div_items) == 0:
+        print 'last page'
+        break
 
-    # 1
-    if re.match(r'一.*', medicine):
-        result['1'] += medicine + ','
-    # 2
-    elif re.match(r'(丁|八|人|儿|九|刀).*', medicine):
-        result['2'] += medicine + ','
-    # 3
-    elif re.match(r'(丁|八|人|儿|九|刀).*', medicine):
-        result['3'] += medicine + ','
-# 2
-    elif re.match(r'(丁|八|人|儿|九|刀).*', medicine):
-        result['4'] += medicine + ','
-# 2
-    elif re.match(r'(丁|八|人|儿|九|刀).*', medicine):
-        result['5'] += medicine + ','
-# 2
-    elif re.match(r'(丁|八|人|儿|九|刀).*', medicine):
-        result['6'] += medicine + ','
-# 2
-    elif re.match(r'(丁|八|人|儿|九|刀).*', medicine):
-        result['7'] += medicine + ','
+    # not the last page
+    for div_item in div_items:
+        result_str = ''
+        if div_item.a:
+            # print div_item.get_text(), '-----', div_item.a['href']
+            result_str = div_item.get_text().encode('utf-8') + '-----' + str(div_item.a['href'])
+        else:
+            # print div_item.get_text()
+            result_str = div_item.get_text().encode('utf-8')
 
-# 2
-    elif re.match(r'(丁|八|人|儿|九|刀).*', medicine):
-        result['8'] += medicine + ','
-# 2
-    elif re.match(r'(丁|八|人|儿|九|刀).*', medicine):
-        result['9'] += medicine + ','
-# 2
-    elif re.match(r'(丁|八|人|儿|九|刀).*', medicine):
-        result['10'] += medicine + ','
+        print result_str
+        print '----------------'
 
-# 2
-    elif re.match(r'(丁|八|人|儿|九|刀).*', medicine):
-        result['11'] += medicine + ','
-# 2
-    elif re.match(r'(丁|八|人|儿|九|刀).*', medicine):
-        result['12'] += medicine + ','
-# 2
-    elif re.match(r'(丁|八|人|儿|九|刀).*', medicine):
-        result['13'] += medicine + ','
-# 2
-    elif re.match(r'(丁|八|人|儿|九|刀).*', medicine):
-        result['14'] += medicine + ','
-# 2
-    elif re.match(r'(丁|八|人|儿|九|刀).*', medicine):
-        result['15'] += medicine + ','
-# 2
-    elif re.match(r'(丁|八|人|儿|九|刀).*', medicine):
-        result['16'] += medicine + ','
+    print 'current page:', str(page_num)
+    page_num += 1
+    exit()
 
-# 2
-    elif re.match(r'(丁|八|人|儿|九|刀).*', medicine):
-        result['16'] += medicine + ','
-# 2
-    elif re.match(r'(丁|八|人|儿|九|刀).*', medicine):
-        result['17'] += medicine + ','
-
-# 2
-    elif re.match(r'(丁|八|人|儿|九|刀).*', medicine):
-        result['18'] += medicine + ','
-
-# 2
-    elif re.match(r'(丁|八|人|儿|九|刀).*', medicine):
-        result['19'] += medicine + ','
-
-# 2
-    elif re.match(r'(丁|八|人|儿|九|刀).*', medicine):
-        result['20'] += medicine + ','
-
-# 2
-    elif re.match(r'(丁|八|人|儿|九|刀).*', medicine):
-        result['21'] += medicine + ','
-
+    r.close()
+    time.sleep(10)
