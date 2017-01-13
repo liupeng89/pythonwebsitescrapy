@@ -102,7 +102,7 @@ class GooglePatentsScrapy:
 
 
     # Parse page of patents contents
-    def ／      　　　　　　　　　　　　　　　　　　　 　　　　　 parsePatentsContents(self, pageSource):
+    def parsePatentsContents(self, pageSource):
 
         # Beautiful soup
         pageObj = BeautifulSoup(pageSource)
